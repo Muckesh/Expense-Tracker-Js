@@ -231,6 +231,11 @@ resetFiltersBtn.addEventListener('click', () => {
     renderExpenses();
 });
 
+window.addEventListener('resize', () => {
+    if (pieChart) pieChart.resize();
+});
+
+
 // Add filter listeners
 filterCategory.addEventListener('change', applyFilters);
 filterMonth.addEventListener('change', applyFilters);
