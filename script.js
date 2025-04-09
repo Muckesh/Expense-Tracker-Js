@@ -95,7 +95,16 @@ expenseForm.addEventListener('submit',function(e){
         return;
     }
 
-    expenses.push({name,amount,category,date});
+    // for editing the expense
+    if (expenseForm.dataset.editingIndex !== undefined) {
+        const index = parseInt(expenseForm.dataset.editingIndex);
+        expenses[index] = {name,amount,category,date};
+        delete expenseForm.dataset.editingIndex;
+    } else {
+        expenses.push({name,amount,category,date});
+    }
+
+    // expenses.push({name,amount,category,date});
 
     saveExpenses();
     renderExpenses();
@@ -113,6 +122,15 @@ function updateSummary(){
 
     totalIncome.textContent = `Rs. ${income}`;
     totalExpense.textContent = `Rs. ${expense}`;
+
+    if (income - expense > 0) {
+        balance.className="total income";
+    } else if(income-expense < 0){
+        balance.className="total expense";
+    }else{
+        balance.className="total";
+    }
+
     balance.textContent = `Rs. ${income-expense}`;
 
 }
@@ -193,6 +211,17 @@ window.deleteExpense = function(index){
         updateSummary();
         drawPieChart();
     }
+}
+
+// edit expense
+window.editExpense = function(index){
+    const expense = expenses[index];
+    document.getElementById('expenseName').value = expense.name;
+    document.getElementById("expenseAmount").value =expense.amount;
+    document.getElementById("expenseCategory").value=expense.category;
+    document.getElementById("expenseDate").value=expense.date;
+
+    expenseForm.dataset.editingIndex = index;
 }
 
 // filter expenses
