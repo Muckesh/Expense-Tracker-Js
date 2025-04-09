@@ -8,6 +8,7 @@
     --border-color: #ddd;
     --expense-color: #e74c3c;
     --income-color: #2ecc71;
+    --icon-color: #333;
 }
   
 .dark-mode {
@@ -20,6 +21,7 @@
     --border-color: #444;
     --expense-color: #ff6b6b;
     --income-color: #6bff6b;
+    --icon-color: #f0f0f0;
 }
 
 *{
@@ -128,6 +130,8 @@ h1{
 .chart-container{
     height: 300px;
     position: relative;
+    display: flex;
+    justify-content: center;
 }
 
 .expense-form{
@@ -245,6 +249,7 @@ button:hover{
     font-size: 1rem;
     margin-left: 10px;
     padding: 5px;
+    color: var(--icon-color);
   }
   
   .expense-item button:hover {

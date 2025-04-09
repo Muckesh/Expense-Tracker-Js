@@ -16,11 +16,37 @@ let pieChart;
 
 // Toggle dark mode
 function darkModeToggle() {
-    body.classList.toggle('dark-mode');
-    const icon = modeToggle.querySelector('i');
-    icon.classList.toggle('fa-sun');
-    icon.classList.toggle('fa-moon');
+    document.body.classList.toggle('dark-mode');
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode',isDarkMode);
+    // const icon = modeToggle.querySelector('i');
+    // icon.classList.toggle('fa-sun');
+    // icon.classList.toggle('fa-moon');
+    modeToggle.innerHTML = isDarkMode ? `<i class="fa-solid fa-sun"></i>` : `<i class="fa-solid fa-moon"></i>`;
+
+    // Update chart colors if it exists
+    if (pieChart) {
+    updateChartColors();
+    pieChart.update();
+    }
 }
+
+// modeToggle.addEventListener('click', function(){
+
+// });
+
+
+if (localStorage.getItem('darkMode')==='true') {
+    document.body.classList.add('dark-mode');
+    modeToggle.innerHTML =`<i class="fa-solid fa-sun"></i>`;
+}
+
+// Set default date to today
+document.getElementById('expenseDate').valueAsDate = new Date();
+  
+// Set default month filter to current month
+const today = new Date();
+filterMonth.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 
 // Save expenses to localStorage
 function saveExpenses() {
@@ -71,7 +97,7 @@ function updateSummary() {
 
 // Draw the pie chart
 function drawPieChart() {
-    const ctx = document.getElementById('pieChart').getContext('2d');
+    // const ctx = document.getElementById('pieChart').getContext('2d');
     const categoryTotals = {};
 
     expenses.forEach(e => {
@@ -90,6 +116,8 @@ function drawPieChart() {
         pieChart.destroy();
     }
 
+    const ctx = document.getElementById('pieChart').getContext('2d');
+
     pieChart = new Chart(ctx, {
         type: 'pie',
         data: {
@@ -97,9 +125,42 @@ function drawPieChart() {
             datasets: [{
                 data,
                 backgroundColor: backgroundColors,
+                borderColor: getComputedStyle(document.body).getPropertyValue('--card-color'),
+                borderWidth: 1
             }],
         },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: getComputedStyle(document.body).getPropertyValue('--text-color')
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: Rs.${value.toFixed(2)} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
     });
+}
+
+// Update chart colors when mode changes
+function updateChartColors() {
+if (!pieChart) return;
+
+pieChart.options.plugins.legend.labels.color = getComputedStyle(document.body).getPropertyValue('--text-color');
+pieChart.update();
 }
 
 // Add or update expense
