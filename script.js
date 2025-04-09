@@ -22,6 +22,22 @@ const noExpenses = document.getElementById('noExpenses');
 
 let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 
+// dummy data for new users
+
+if (!localStorage.getItem('expenses') || JSON.parse(localStorage.getItem('expenses')).length === 0) {
+    expenses = [
+        { name: 'Salary (Dummy datas)', amount: 50000, category: 'Income', date: '2025-04-01' },
+        { name: 'Groceries', amount: 2000, category: 'Food', date: '2025-04-03' },
+        // { name: 'Bus Pass', amount: 800, category: 'Transport', date: '2025-04-05' },
+        { name: 'Netflix', amount: 500, category: 'Entertainment', date: '2025-04-07' },
+        // { name: 'Electricity Bill', amount: 1200, category: 'Utilities', date: '2025-04-08' },
+        // { name: 'Medicine', amount: 600, category: 'Healthcare', date: '2025-04-04' },
+        { name: 'Tuition Fees', amount: 3000, category: 'Education', date: '2025-04-06' }
+    ];
+    saveExpenses();
+}
+
+
 let pieChart;
 
 modeToggle.addEventListener('click',function(){
